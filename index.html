@@ -3,37 +3,139 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Rebus GitHub Pages</title>
+  <title>Krypto Rebus Instructions</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      max-width: 600px;
-      margin: 50px auto;
+      max-width: 800px;
+      margin: 40px auto;
       padding: 0 20px;
-      text-align: center;
-      background-color: #f9f9f9;
+      background-color: #f5f5f5;
       color: #333;
     }
     h1 {
       color: #007acc;
+      text-align: center;
     }
     p {
       font-size: 1.2em;
+      margin-bottom: 30px;
+      text-align: center;
     }
-    a {
-      color: #007acc;
-      text-decoration: none;
-      font-weight: bold;
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: white;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
     }
-    a:hover {
-      text-decoration: underline;
+    th, td {
+      padding: 12px 15px;
+      border: 1px solid #ddd;
+      text-align: left;
+    }
+    th {
+      background-color: #007acc;
+      color: white;
+    }
+    tbody tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+    tbody tr {
+      cursor: pointer;
+    }
+    tbody tr:hover {
+      background-color: #cce4ff;
     }
   </style>
 </head>
 <body>
-  <h1>kryptorebus.github.io!</h1>
-  <p>Toto je jednoduchá statická stránka hostovaná na GitHub Pages.</p>
-  <p>Více informací najdete na <a href="https://github.com/kryptorebus" target="_blank" rel="noopener">mém GitHub profilu</a>.</p>
+  <h1>Krypto Rebus</h1>
+  <p>Send the estimated or hinted amount and collect everything!<br />
+  Failure randomly returns 90 to 100% plus a random hint.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Síť</th>
+        <th>Adresa kontraktu</th>
+        <th>Hodnota kontraktu</th>
+        <th>Obtížnost</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr data-file="network1.html">
+        <td>Network 1</td>
+        <td>0x1234567890abcdef1234567890abcdef12345678</td>
+        <td>10 ETH</td>
+        <td>Easy</td>
+      </tr>
+      <tr data-file="network2.html">
+        <td>Network 2</td>
+        <td>0xabcdefabcdefabcdefabcdefabcdefabcdefabcd</td>
+        <td>5 ETH</td>
+        <td>Medium</td>
+      </tr>
+      <tr data-file="network3.html">
+        <td>Network 3</td>
+        <td>0x0fedcba09876543210fedcba09876543210fedcb</td>
+        <td>2 ETH</td>
+        <td>Hard</td>
+      </tr>
+      <tr data-file="network4.html">
+        <td>Network 4</td>
+        <td>0xabcdef123456abcdef123456abcdef123456abcd</td>
+        <td>20 ETH</td>
+        <td>Easy</td>
+      </tr>
+      <tr data-file="network5.html">
+        <td>Network 5</td>
+        <td>0x1234abcd1234abcd1234abcd1234abcd1234abcd</td>
+        <td>7 ETH</td>
+        <td>Medium</td>
+      </tr>
+      <tr data-file="network6.html">
+        <td>Network 6</td>
+        <td>0xabcdabcdabcdabcdabcdabcdabcdabcdabcdabcd</td>
+        <td>15 ETH</td>
+        <td>Hard</td>
+      </tr>
+      <tr data-file="network7.html">
+        <td>Network 7</td>
+        <td>0x1111111111111111111111111111111111111111</td>
+        <td>3 ETH</td>
+        <td>Easy</td>
+      </tr>
+      <tr data-file="network8.html">
+        <td>Network 8</td>
+        <td>0x2222222222222222222222222222222222222222</td>
+        <td>8 ETH</td>
+        <td>Medium</td>
+      </tr>
+      <tr data-file="network9.html">
+        <td>Network 9</td>
+        <td>0x3333333333333333333333333333333333333333</td>
+        <td>1 ETH</td>
+        <td>Hard</td>
+      </tr>
+      <tr data-file="network10.html">
+        <td>Network 10</td>
+        <td>0x4444444444444444444444444444444444444444</td>
+        <td>12 ETH</td>
+        <td>Medium</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <script>
+    document.querySelectorAll('tbody tr').forEach(row => {
+      row.addEventListener('click', () => {
+        const file = row.getAttribute('data-file');
+        if (file) {
+          window.open(file, '_blank');
+        }
+      });
+    });
+  </script>
 </body>
 </html>
 
