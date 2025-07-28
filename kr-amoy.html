@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Krypto Rebus Interface</title>
+  <!--<script src="https://cdn.jsdelivr.net/npm/ethers/dist/ethers.min.js"></script>-->
+  <!--<script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>-->
+  <script src="ethers.umd.min.js"></script>
+  
+
+  <style>
+  body {
+    font-family: sans-serif;
+    max-width: 800px;
+    margin: auto;
+    padding: 1em;
+    background-color: #1e1e1e;
+    color: #f0f0f0;
+  }
+
+  h1, h2 {
+    color: #00b4d8;
+  }
+
+  h1 {
+    text-align: center;
+  }
+  h5 {
+    text-align: center; color: grey;
+  }
+
+  .header-container {
+    display: flex;
+    align-items: center;
+    gap: 1.5em;
+    margin-bottom: 1em;
+    width: 100%;          /* přidáno - zabere celou šířku */
+    justify-content: space-between;  /* prvky se roztáhnou od kraje ke kraji */
+    box-sizing: border-box; /* aby padding/margin neovlivňovalo celkovou šířku */
+    padding: 0 1em;       /* malý odsazení zleva a zprava (lze upravit) */
+  }
+  .styled-button {
+    width: auto;
+    min-width: 110px;
+    padding: 0.6em 1.2em;
+    display: block;
+    margin: 1em auto 0;
+    background-color: #005a8c;
+    color: lightgrey;
+    border-radius: 5px;
+    border: 1px solid #000000;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    max-height: 400px
+  }
+.styled-button:hover {
+  background-color: #00416b; /* tmavší varianta modré */
+}
+ 
+
+  .logo {
+    max-width: 100px;
+    height: auto;
+    object-fit: contain;
+  }
+
+  .highlight {
+    font-size: 3em;
+    font-weight: bold;
+    color: #90e0ef;
+    animation: fadeIn 0.5s ease-in-out;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes flash {
+    0%   { background-color: #2ecc71; }
+    100% { background-color: transparent; }
+  }
+
+  .flash {
+    animation: flash 1s ease-out;
+  }
+
+  #balance {
+    font-size: 3.3em;
+    color: #48cae4;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+    display: block;
+    max-width: 100%;   /* důležité */
+  }
+
+  .balance-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    font-weight: normal;
+    color: #90e0ef;
+    font-size: 1.4em;
+    min-width: 100px;
+    line-height: 1.0;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+  }
+
+  .eth-label {
+    color: #ccc;
+    font-weight: normal;
+    font-size: 0.8em;
+    margin-top: 0.1em;
+  }
+
+  input {
+    padding: 0.5em;
+    font-size: 1em;
+    width: 80%;
+    margin: 0.5em auto;
+    display: block;
+    text-align: center;
+    background-color: #333;
+    color: #f0f0f0;
+    border: 1px solid #555;
+    border-radius: 5px;
+  }
+
+  button {
+    width: auto;
+    min-width: 120px;
+    padding: 0.6em 1.2em;
+    display: block;
+    margin: 1em auto 0;
+    background-color: #0077b6;
+    color: white;
+    border-radius: 5px;
+    border: 2px solid #ccc;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  button:hover {
+    background-color: #005f73;
+  }
+
+  button.fullwidth {
+    width: 100%;
+    margin: 1em 0 0;
+  }
+
+  #status {
+    margin-top: 1em;
+    font-weight: bold;
+    text-align: left;
+    max-width: 50%;
+    width: 50%;
+  }
+  .nft-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1em;
+    margin-top: 0em;
+    min-height: 100px;
+  }
+
+  .nft-card {
+    border: 1px solid #444;
+    border-radius: 5px;
+    padding: 0.5em;
+    background: #2a2a2a;
+    width: 160px;
+    text-align: center;
+  }
+
+  .nft-card img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 5px;
+  }
+#contractAddress::selection {
+  background-color: #666;
+  color: #fff;
+}
+  #helpBox {
+    display: none;
+    background-color: #2a2a2a;
+    border: 1px solid #444;
+    border-radius: 8px;
+    padding: 1em;
+    margin-top: 1.5em;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+    font-size: 1em;
+    line-height: 1.5;
+    color: #ddd;
+    width: 100%;
+    box-sizing: border-box;
+    overflow-x: auto;
+    text-align: left;
+  }
+
+  @media (max-width: 600px) {
+    body {
+      background-color: #121212;
+    }
+
+    .header-container {
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5em;
+      text-align: center;
+    }
+
+    .logo {
+      width: 80px;
+      height: 100px;
+    }
+
+    h1 {
+      font-size: 1.5em;
+    }
+
+    
+
+    .eth-label {
+      font-size: 0.8em;
+    }
+  }
+body.light-mode {
+  background-color: #888888; /*#f5f5f5;*/
+  color: #222;
+}
+
+body.light-mode h1, body.light-mode h2 {
+  color: #0077b6;
+}
+
+body.light-mode .balance-wrapper {
+  color: #0077b6;
+}
+
+body.light-mode input {
+  background-color: #fff;
+  color: #000;
+  border: 1px solid #ccc;
+}
+
+body.light-mode .nft-card {
+  background: #ffffff;
+  border: 1px solid #ccc;
+  color: #000;
+}
+
+body.light-mode #helpBox {
+  background-color: #fff;
+  color: #000;
+  border-color: #ccc;
+}
+
+body.light-mode .eth-label {
+  color: #555;
+}
+
+</style>
+
+</head>
+<body>
+<div style="display: flex; gap: 10px;top: 0;">
+  <button class="styled-button" onclick="location.href='kr-local0.html';" >    Local 8545  </button>
+  <button                       onclick="location.href='kr-amoy.html';">       Amoy  </button>
+  <button class="styled-button" onclick="location.href='kr-amoy.html';">       Polygon Mainnet  </button>
+  <button class="styled-button" onclick="location.href='kr-amoy.html';">       Ethereum Mainnet  </button>
+</div>
+<!-- Mezera po tlačítkách -->
+<div style="margin-top: 30px;"></div>
+
+  <div class="header-container">
+      <img src="nft_image_logo.png" class="logo" alt="Krypto Rebus" />
+    <h1>Get: 💰 </h1>
+    <div class="balance-wrapper">
+      <div id="balance" class="highlight">Loading...</div>
+      <div class="eth-label">ETH</div>
+    </div>
+  </div>
+
+  <div style="text-align: center; margin-top: -1.5em;">
+  <h5 style="margin: 0 0 0.2em 0;">Contract Address:</h5>
+  <div style="display: inline-flex; align-items: center; gap: 0.2em; font-size: 1.3em; margin: 0;">
+    <span id="contractAddress">Loading...</span>
+    <button onclick="copyContractAddress()" 
+            title="Copy to clipboard"
+            style="
+              padding: 0;
+              margin-left: -2.1em;
+              font-size: 0.9em;
+              line-height: 1;
+              cursor: pointer;
+              border: none;
+              background: none;
+              vertical-align: middle;
+              position: relative;
+              top: -0.6em;
+            ">
+      📋
+    </button>
+  </div>
+</div>
+
+
+
+
+  <h2>Send ETH to the contract as the correct solution to the rebus and get all the balance</h2>
+  <input type="number" id="amount" placeholder="Amount in ETH"  step="0.001" min="0" style=" width: 70%;
+    color: darkblue;               /* viditelný text */
+    background-color: lightgrey;    /* kontrastní pozadí */
+    border: 1px solid #ccc;
+    padding: 0.2em;
+    border-radius: 4px;
+    font-size: 1.3em; font-weight: bold; 
+  "/>
+  <button onclick="sendEth()">🚀 Send</button>
+  <div id="status2" style="word-wrap: break-word; overflow-wrap: break-word;
+    white-space: normal;font-weight: normal; color: grey; text-align: center; margin: 1em auto;"></div>
+  <div style="display: flex; justify-content: flex-start; align-items: center; gap: 1em; width: 90%; margin: 1em auto;">
+        <div id="status" style="
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;font-weight: normal; color: lightgrey;
+    ">Loading ...</div>
+    <button id="helpBtn" class="styled-button" onclick="toggleHelp()">❓ Help</button>
+    <button id="themeToggle" class="styled-button">🌞 / 🌙</button>
+    <button id="reloadBtn" class="styled-button" onclick="reloadBtn()">🔄 Reload</button>
+  </div>
+  
+  <hr style="border: none; height: 2px; background-color: grey;">
+  
+  <div id="helpBox">Loading help...</div>
+<!--------------- owner only-->
+
+  <div id="ownerControls" style="display: none; justify-content: flex-start;width: 90%; margin: 0em 0;">
+    <h2>🛠 Owner Controls </h2>
+    <div style="display: flex; justify-content: flex-start; align-items: center; gap: 2px; 
+            margin: -1em 0em 1em 5em;">
+      <button onclick="withdrawAll()" 
+        class="styled-button"style="margin: 0 0;">🏦 Withdraw All</button>
+      <button onclick="setContractActive(true)" 
+        class="styled-button" style="margin: 0 0;">🔛 Activate</button>
+      <button onclick="setContractActive(false)"
+        class="styled-button" style="margin: 0 0;">🔴 Deactivate</button>
+    </div>
+
+    <div style="display: flex; justify-content: flex-start; align-items: center; gap: 2px; 
+          margin: 0em 0em 0em 3em;">
+      <input type="number" id="clueIndex" placeholder="index (0-x)" min="0"
+             style="width: 8em ;margin: 0em 1em 0em 0em;" />
+      <button onclick="getClueInfo()"
+        class="styled-button" style="margin: 0 0;">🔍 Get Clue Info</button>
+      <button onclick="getCluePriceInfo()"
+        class="styled-button" style="margin: 0 0;">💰 Get Clue Price</button>
+      <button onclick="getCluePriceInEthInfo()"
+        class="styled-button" style="margin: 0 0;">💸 Get Clue Price in ETH</button>
+    </div>
+
+    <div style="display: flex; justify-content: flex-start; align-items: center; gap: 2px; 
+          margin: 0em 0em 0em 3em;">
+      <input type="number" id="jackpotVariant" placeholder="level (0-4)" min="0" max="4"
+             style="width: 8em; margin: 0em 1em 0em 0em;" />
+      <input type="number" id="userOrder" placeholder="user order (1-x)" min="1"
+             style="width: 8em; margin: 0em 1em 0em 0em;" />       
+      <button onclick="getJackpotWin()"
+        class="styled-button" style="margin: 0 0;">💼 Get Win & Jackpot</button>
+      <button onclick="getJackpotWinEth()"
+        class="styled-button" style="margin: 0 0;">💸 Get Win & Jackpot in ETH</button>
+    </div>
+    <div style="display: flex; justify-content: flex-start; align-items: center; gap: 2px; 
+            margin: 1em 0em 1em 5em;">
+      <button onclick="getAllPlayers()"
+        class="styled-button" style="margin: 0 0;">🧑‍🤝‍🧑 Get All Players</button>
+      <button onclick="getAllUsersData()"
+        class="styled-button" style="margin: 0 0;">📊 Get All Users Data</button>
+      <button onclick="getRebusData()"
+        class="styled-button" style="margin: 0 0;">🧠 Get Rebus Data</button>
+      <button onclick="getUserDataOfAll()" 
+        class="styled-button" style="margin: 0 0;">📋 Get User Data Of All</button>
+    </div>
+    <div id="ownerOutput" style="
+      width: 100%;
+      padding: 2em;
+      background-color: #1a1a2e;
+      color: #e0e0e0;
+      border: 2px solid #00f5d4;
+      border-radius: 12px;
+      box-shadow: 0 0 10px #00f5d4;
+      font-family: monospace;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      white-space: normal;
+    "></div>
+
+  </div>
+
+
+
+
+
+  <h2>🔍 Your NFTs clues</h2>
+<!--  <div id="nftList" class="nft-grid">Loading...</div>  -->
+  <div id="nftList" class="nft-grid" style="margin: -1em auto 0 auto; color: grey" >.</div>
+  
+  
+<!---------------message to owner c-->
+  <h2>💬 Write, comment...</h2>
+  
+  <input type="text" id="fromInput"    data-default="Name or your@email" placeholder="Name or your@email" style="width: 70%;" />
+  <input type="text" id="messageInput" data-default="Message"placeholder="Message" style="width: 70%;" />
+  <input type="text" id="addInput"     data-default="Additional info (URL or note)" placeholder="Additional info (URL or note)" />
+  <input type="number" id="ethForMessage" data-default="ETH to send" placeholder="ETH to send" value="0.01" step="0.001" min="0" style="width: 50%;"/>
+  <button onclick="sendMessageToOwner()">📧 Send Message</button>
+  
+  <div id="sendMessageToOwnerStatus" style="margin: 1em auto 0 auto;width: 90%; word-wrap: break-word; overflow-wrap: break-word; white-space: normal;text-align: center;"></div>
+  
+
+
+
+  <script>
+    //const CONTRACT_ADDRESS = "0x5FbDB2315678afecb367f032d93F642f64180aa3";//local
+    const CONTRACT_ADDRESS = "0x6868fB44016152f069A2D7AAb7EF35B47Eb2580A";//amoy
+    //const CONTRACT_ADDRESS = "0x7D70387758dA586D49cc5F290f1Db2C0aD4595b1";//amoy2
+    
+ /*   
+    const ABI = [
+  "function balanceOf(address owner) view returns (uint256)",
+  "function tokenOfOwnerByIndex(address owner, uint256 index) view returns (uint256)",
+  "function tokenURI(uint256 tokenId) view returns (string)",
+  "function messageToOwner(string _from, string _message, string _add) external payable",
+  "function withdrawAll() external",
+  "function setActive(bool _state) external",
+  "function owner() view returns (address)",
+  "function getClue(uint index) external view returns (uint64, bytes, string, uint16, uint16, int64, uint16)",
+  "function getCluePrice(uint index) external view returns (uint256, bytes, string, uint16, uint16, int64, uint16, uint256)",
+  "function getCluePriceInEth(uint index) external view returns (string)",
+  "function getcluewei(uint index) external view returns (uint256)",
+  "function getminWinBalance(uint8 varianta) view returns (uint256)",
+  "function getJackpot(uint8 varianta) view returns (uint256)",
+  "function getJackpotWinBalance(uint8 varianta) view returns (uint256, uint256)",
+  "function getJackpotWinBalanceInEth(uint8 varianta) view returns (string, string)",
+  "function getAllPlayers() view returns (address[])",
+  "function getRebusData() view returns (tuple(string name, uint256 attemptMinimum, bool active, uint8 prcJackpotOfBalance, uint256 multiplyToWei, string imageHttpFolder))",
+  "function getAllUsersData() view returns (tuple(uint64 attemptCounter, uint128 attemptSum, uint64 refundCounter, uint128 refundSum, uint128 winSum, uint32 winCounter))",
+  "function getUserDataOfAll() view returns (tuple(uint128 attemptSum, uint128 winSum, uint32 attemptCounter, uint32 depositFeeCounter, uint16 returnDepositMinimum, uint16 returnDepositMaximum, uint16 depositFee, uint16 clueLast, uint8 winCounter, bool cluesGeneratedOnly, bool cluesRandom)[])"
+];
+*/
+let ABI;
+let provider, signer, userAddress, contract;
+
+  async function loadABI() {
+    try {
+      const response = await fetch('KryptoRebus.json');
+      if (!response.ok) throw new Error('Failed to fetch artifact');
+      const artifact = await response.json();
+      ABI = artifact.abi;
+    } catch (err) {
+      console.error('Error loading ABI:', err);
+    }
+  }
+ //   let provider, signer, userAddress, contract;
+
+    async function init() {
+  try {
+    if (!window.ethereum) {
+      alert("MetaMask required.");
+      console.log("MetaMask not found");
+      document.getElementById("status2").textContent = "❌ MetaMask not found.";
+      return;
+    }
+
+    console.log("MetaMask detected");
+
+    const accounts = await ethereum.request({ method: "eth_requestAccounts" });
+    console.log("Accounts:", accounts);
+
+    if (accounts.length === 0) {
+      document.getElementById("status2").textContent = "❌ No accounts connected.";
+      return;
+    }
+// **Nejdříve načíst ABI**
+    await loadABI();
+
+    if (!ABI) {
+      document.getElementById("status2").textContent = "❌ Could not load ABI.";
+      return;
+    }
+    provider = new ethers.providers.Web3Provider(window.ethereum);
+    signer = provider.getSigner();
+    userAddress = await signer.getAddress();
+    console.log("User address:", userAddress);
+
+    //contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, provider);
+    contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, signer);
+
+    const balance = await provider.getBalance(CONTRACT_ADDRESS);
+    document.getElementById("balance").textContent = ethers.utils.formatEther(balance);
+    document.getElementById("contractAddress").textContent = CONTRACT_ADDRESS;
+    //document.getElementById("fromInput").value = userAddress;
+
+    const ownerAddr = await contract.owner();
+    console.log("Owner address:", ownerAddr);
+
+    if (userAddress.toLowerCase() === ownerAddr.toLowerCase()) {
+      document.getElementById("ownerControls").style.display = "block";
+      console.log("User is owner, showing owner controls");
+    }
+
+    await loadNFTs();
+    
+    //showLastUpdated();
+    const now = new Date().toLocaleTimeString();
+    //document.getElementById("status").innerText = `✅ Data aktualizována v ${now}`;
+    document.getElementById("status").textContent = `Updated  🕒 ${now}`;
+    
+    // Spustit automatické obnovení každou minutu
+    if (userAddress.toLowerCase() != ownerAddr.toLowerCase()) {
+      setInterval(() => { location.reload();refreshFrontend();/*showLastUpdated();*/ }, 3000000);
+    }
+  } catch (e) {
+    console.error("Initialization error:", e);
+    document.getElementById("status2").textContent = "❌ Initialization error: " + e.message;
+  }
+}
+ //-------------------------------------------------------
+  function showLastUpdated() {
+    const now = new Date().toLocaleTimeString();
+    document.getElementById("status").innerText = `Updated  🕒 ${now}`;
+  }
+  function reloadBtn() {
+    location.reload();showLastUpdated()
+  }
+  async function refreshFrontend() {
+    document.getElementById("fromInput").value = document.getElementById("fromInput").dataset.default;
+    document.getElementById("messageInput").value = document.getElementById("messageInput").dataset.default;
+    document.getElementById("addInput").value = document.getElementById("addInput").dataset.default;
+    document.getElementById("sendMessageToOwnerStatus").innerText = "";
+    // Načti a zobraz balance kontraktu
+    try {
+        const newBalance = await provider.getBalance(CONTRACT_ADDRESS);
+        const balanceEl = document.getElementById("balance");
+        balanceEl.textContent = ethers.utils.formatEther(newBalance) ;
+        balanceEl.classList.add("flash");
+        setTimeout(() => balanceEl.classList.remove("flash"), 	120000); // 0.5 s
+        
+    } catch (e) {
+        console.error("Chyba při načítání balance:", e);
+    }
+
+    // Načti NFT
+    
+        await loadNFTs();
+    
+        
+    
+    //location.reload();
+    //await updateBalance();
+    //await updateJackpot();
+    //await updateUserNFTs();
+    //clearInputFields();
+  }
+
+    async function sendEth() {
+      const eth = document.getElementById("amount").value;
+      if (!eth || isNaN(eth) || eth <= 0) {
+        document.getElementById("status2").textContent = "❌ Invalid ETH amount.";
+        return;
+      }
+      const estimatedGas = await signer.estimateGas({
+        to: CONTRACT_ADDRESS,
+        value: ethers.utils.parseEther(eth)
+      });
+      try {
+        const tx = await signer.sendTransaction({
+          to: CONTRACT_ADDRESS,
+          value: ethers.utils.parseEther(eth),
+          gasLimit: estimatedGas.mul(12).div(10)  // přidej 20 % rezervu
+        });
+
+        document.getElementById("status2").textContent = "⏳ Waiting for confirmation...";
+        await tx.wait();
+        document.getElementById("status2").textContent = "✅ Sent!";
+
+        const newBalance = await provider.getBalance(CONTRACT_ADDRESS);
+        const balanceEl = document.getElementById("balance");
+        balanceEl.textContent = ethers.utils.formatEther(newBalance);
+        balanceEl.classList.add("flash");
+        setTimeout(() => balanceEl.classList.remove("flash"), 	120000);
+        loadNFTs();
+      } catch (err) {
+        document.getElementById("status2").textContent = "❌ Error: " + err.message;
+      }
+    }
+
+    async function loadNFTs() {
+      try {
+        const nftCount = await contract.balanceOf(userAddress);
+        const nftList = document.getElementById("nftList");
+        nftList.innerHTML = "";
+
+        //for (let i = 0; i < nftCount; i++) {
+        for (let i = nftCount - 1; i >= 0; i--) {
+          const tokenId = await contract.tokenOfOwnerByIndex(userAddress, i);
+          const tokenUri = await contract.tokenURI(tokenId);
+          const response = await fetch(tokenUri);
+          const metadata = await response.json();
+
+          const card = document.createElement("div");
+          card.className = "nft-card";
+          card.innerHTML = `<img src="${metadata.image}" alt=" " />
+                            <div><strong style="color: blue;font-size: 1.2em;white-space: normal; 
+                                  overflow-wrap: break-word; word-break: break-word;"
+                                  >${metadata.name}</strong></div>
+                            <div class="nft-description" style="color: font-size: 1.0em;gray;white-space: normal; 
+                                  overflow-wrap: break-word;word-break: break-word;"
+                                  >${metadata.description || "No description available."}</div>
+                            <div class="nft-external_link" style="color: gray;font-size: 0.8em;
+                                  white-space: normal;overflow-wrap: break-word;word-break: break-word;"
+                                  >${metadata.external_link || ""}</div>
+                            `;
+          nftList.appendChild(card);
+        }
+
+        if (nftCount == 0) {
+          nftList.innerHTML = "<p>No NFTs found.</p>";
+        }
+      } catch (err) {
+        document.getElementById("nftList").textContent = "❌ Failed to load NFTs.";
+      }
+    }
+
+    let helpLoaded = false;
+
+    function toggleHelp() {
+      const box = document.getElementById("helpBox");
+
+      if (box.style.display === "none" || box.style.display === "") {
+        box.style.display = "block";
+
+        if (!helpLoaded) {
+          fetch("kr_help.html")
+            .then((response) => response.text())
+            .then((html) => {
+              const parser = new DOMParser();
+              const doc = parser.parseFromString(html, 'text/html');
+              const bodyContent = doc.body.innerHTML;
+              box.innerHTML = bodyContent;
+              helpLoaded = true;
+            })
+            .catch((err) => {
+              box.innerHTML = "❌ Loading error: " + err.message;
+            });
+        }
+      } else {
+        box.style.display = "none";
+      }
+    }
+//-------------------------------------------------------    
+    async function sendMessageToOwner() {
+    const from = userAddress +":"+ document.getElementById("fromInput").value.trim();
+    const message = document.getElementById("messageInput").value.trim();
+    const add = document.getElementById("addInput").value.trim();
+    const ethValue = document.getElementById("ethForMessage").value.trim();
+
+    if (/*!from || !message ||*/ !ethValue || isNaN(ethValue) || ethValue <= 0) {
+      document.getElementById("sendMessageToOwnerStatus").textContent = "❌ Fill all fields and enter valid ETH.";
+      return;
+    }
+
+    try {
+      const tx = await signer.sendTransaction({
+        to: CONTRACT_ADDRESS,
+        value: ethers.utils.parseEther(ethValue),
+        data: contract.interface.encodeFunctionData("messageToOwner", [from, message, add])
+      });
+
+      document.getElementById("sendMessageToOwnerStatus").textContent = "⏳ Sending message...";
+      await tx.wait();
+      document.getElementById("sendMessageToOwnerStatus").textContent = 
+      "✅ Message sent! NFT should be minted.";          
+      
+      refreshFrontend();
+    } catch (err) {
+      document.getElementById("sendMessageToOwnerStatus").textContent = "❌ Error: " + err.message;
+    }
+  }
+//-------------------------------------------------------  
+async function withdrawAll() {
+  try {
+    const ownerContract = contract.connect(signer);
+    const tx = await ownerContract.withdrawAll();
+    document.getElementById("ownerOutput").textContent = "⏳ Withdrawing...";
+    await tx.wait();
+    document.getElementById("ownerOutput").textContent = "✅ Withdraw successful.";
+    const updated = await provider.getBalance(CONTRACT_ADDRESS);
+    document.getElementById("balance").textContent = ethers.utils.formatEther(updated);
+  } catch (err) {
+    document.getElementById("ownerOutput").textContent = "❌ Withdraw failed: " + err.message;
+  }
+}
+//--------------------------------------------------------
+// Funkce pro získání informací o clue
+async function getClueInfo() {
+  const index = document.getElementById("clueIndex").value;
+  if (index === "") {
+    document.getElementById("ownerOutput").textContent = "❌ Please enter a valid clue index.";
+    return;
+  }
+
+  try {
+    const clue = await contract.getClue(index);
+    const clueInfo = `
+      <strong>Clue Information:</strong>
+      <ul>
+        <li><strong>Price:</strong> ${clue[0]}</li>
+        <li><strong>Clue:</strong> ${clue[2]}</li>
+        <li><strong>Clue Param 0:</strong> ${clue[3]}</li>
+        <li><strong>Clue Param 1:</strong> ${clue[4]}</li>
+        <li><strong>Clue Param 2:</strong> ${clue[5]}</li>
+        <li><strong>Clue Param 3:</strong> ${clue[6]}</li>
+      </ul>
+    `;
+    document.getElementById("ownerOutput").innerHTML = clueInfo;
+  } catch (err) {
+    document.getElementById("ownerOutput").textContent = "❌ Failed to fetch clue info: " + err.message;
+  }
+}
+
+// Funkce pro získání ceny clue
+async function getCluePriceInfo() {
+  const index = document.getElementById("clueIndex").value;
+  if (index === "") {
+    document.getElementById("ownerOutput").textContent = "❌ Please enter a valid clue index.";
+    return;
+  }
+
+  try {
+    const priceData = await contract.getCluePrice(index);
+    const priceInfo = `
+      <strong>Clue Price Information:</strong>
+      <ul>
+        <li><strong>Price:</strong> ${priceData[0]}</li>
+        <li><strong>Clue:</strong> ${priceData[2]}</li>
+        <li><strong>Clue Param 0:</strong> ${priceData[3]}</li>
+        <li><strong>Clue Param 1:</strong> ${priceData[4]}</li>
+        <li><strong>Clue Param 2:</strong> ${priceData[5]}</li>
+        <li><strong>Clue Param 3:</strong> ${priceData[6]}</li>
+        <li><strong>Calculated Price (Wei):</strong> ${priceData[7]}</li>
+      </ul>
+    `;
+    document.getElementById("ownerOutput").innerHTML = priceInfo;
+  } catch (err) {
+    document.getElementById("ownerOutput").textContent = "❌ Failed to fetch clue price: " + err.message;
+  }
+}
+
+// Funkce pro získání ceny clue v ETH
+async function getCluePriceInEthInfo() {
+  const index = document.getElementById("clueIndex").value;
+  if (index === "") {
+    document.getElementById("ownerOutput").textContent = "❌ Please enter a valid clue index.";
+    return;
+  }
+
+  try {
+    const priceInEth = await contract.getCluePriceInEth(index);
+    document.getElementById("ownerOutput").textContent = `Clue Price in ETH: ${priceInEth}`;
+  } catch (err) {
+    document.getElementById("ownerOutput").textContent = "❌ Failed to fetch clue price in ETH: " + err.message;
+  }
+}
+//------------------------------------------------------
+async function getJackpotWin() {
+  const variant = parseInt(document.getElementById("jackpotVariant").value);
+  if (isNaN(variant) || variant < 0 || variant > 4 ) {
+    document.getElementById("ownerOutput").textContent = "❌ Please enter a valid variant (0-4).";
+    return;
+  }
+  const userOrder = parseInt(document.getElementById("userIndex").value);
+  if (isNaN(userOrder) || userOrder < 1 ) {
+    document.getElementById("ownerOutput").textContent = "❌ Please enter a valid userOrder(=index+1) (1-x)";
+    return;
+  } 
+  try {
+    const [jackpot, minWin] = await contract.getJackpotWinBalance(variant, userOrder);
+    const info = `
+      <strong>🎯 Jackpot Variant        ${variant}:</strong>
+      <strong>🎯 User Order (=Index+1)  ${userOrder}:</strong>
+      <ul>
+        <li>💰 Jackpot (wei): ${jackpot}</li>
+        <li>🏆 Min Win Balance (wei): ${minWin}</li>
+      </ul>
+    `;
+    document.getElementById("ownerOutput").innerHTML = info;
+  } catch (err) {
+    document.getElementById("ownerOutput").textContent = "❌ Failed to fetch jackpot values: " + err.message;
+  }
+}
+
+async function getJackpotWinEth() {
+  const variant = parseInt(document.getElementById("jackpotVariant").value);
+  if (isNaN(variant) || variant < 0 || variant > 4) {
+    document.getElementById("ownerOutput").textContent = "❌ Please enter a valid variant (0-4).";
+    return;
+  }
+  const userOrder = parseInt(document.getElementById("userOrder").value);
+  if (isNaN(userOrder) || userOrder < 1 ) {
+    document.getElementById("ownerOutput").textContent = "❌ Please enter a valid userOrder(=index+1) (1-x)";
+    return;
+  }
+  try {
+    const [jackpotEth, minWinEth] = await contract.getJackpotWinBalanceInEth(variant,userOrder);
+    const info = `
+      <strong>🎯 Jackpot Variant ${variant}:</strong>
+      <strong>🎯 User Order      ${userOrder}:</strong>
+      <ul>
+        <li>💰 Jackpot: ${jackpotEth} ETH</li>
+        <li>🏆 Min Win Balance: ${minWinEth} ETH</li>
+      </ul>
+    `;
+    document.getElementById("ownerOutput").innerHTML = info;
+  } catch (err) {
+    document.getElementById("ownerOutput").textContent = "❌ Failed to fetch jackpot ETH values: " + err.message;
+  }
+}
+//---------------------------------------------------------
+async function setContractActive(state) {
+  try {
+    const ownerContract = contract.connect(signer);
+    const tx = await ownerContract.setActive(state);
+    document.getElementById("ownerOutput").textContent = `⏳ Setting active = ${state}...`;
+    await tx.wait();
+    document.getElementById("ownerOutput").textContent = `✅ Active set to ${state}`;
+  } catch (err) {
+    document.getElementById("ownerOutput").textContent = "❌ Failed: " + err.message;
+  }
+}
+//------------------------------------------------------------
+async function getAllPlayers() {
+  try {
+    //const result = await contract.getAllPlayers();
+    //displayOutput("All Players:\n" + result.join("\n"));
+    const adresa = await contract.getAllPlayers();
+    let listItems = adresa.map((addr, i) => `<li>${i + 1}. adresa: ${addr}</li>`).join("");
+    const info = `
+    <ul style="list-style-type: none; padding-left: 0; margin-left: 0;">
+      <li><b>Adresy v pořadí registrace:</b></li>  ${listItems}
+    </ul>
+  `;
+
+    document.getElementById("ownerOutput").innerHTML = info;
+    
+  } catch (error) {
+    handleError(error, "Failed to fetch all players");
+  }
+}
+
+
+
+async function getAllUsersData() {
+  try {
+    //const result = await contract.getAllUsersData();
+    //displayOutput("All Users Data:\n" + JSON.stringify(result, null, 2));
+    const [attemptCounter,attemptSum,refundCounter,refundSum,winCounter,winSum,feeCounter,feeSumPartial,feeSum] = await contract.getAllUsersData();
+    const info = `
+      <ul style="list-style-type: none; padding-left: 0; margin-left: 0;">
+        <li>attemptCounter: ${attemptCounter} </li>
+        <li>...attemptSum : ${attemptSum}n = ${attemptSum/1e+18}e</li>
+        <li>refundCounter : ${refundCounter} </li>
+        <li>....refundSum : ${refundSum}n = ${refundSum/1e+18}e : ${(refundSum*100/attemptSum).toFixed(2)}%</li>
+        <li>...winCounter : ${winCounter} </li>
+        <li>.......winSum : ${winSum}n = ${winSum/1e+18}e : ${(winSum*100/attemptSum).toFixed(2)}%</li>
+        <li>feeCounter... : ${feeCounter} </li>
+        <li>feeSumPartial : ${feeSumPartial}n = ${feeSumPartial/1e+18}e </li>
+        <li>feeSum....... : ${feeSum}n = ${feeSum/1e+18}e : ${(feeSum*100/attemptSum).toFixed(2)}%</li>
+      </ul>
+    `;
+    document.getElementById("ownerOutput").innerHTML = info;
+ 
+    
+  } catch (error) {
+    handleError(error, "Failed to fetch all users data");
+  }
+}
+
+async function getRebusData() {
+  try {
+    //const data = await contract.getRebusData();
+    //console.log("Rebus data:", data);
+    //document.getElementById("ownerOutput").textContent = JSON.stringify(data, null, 2);
+    const [name, attemptMinimum, active, prcJackpotOfBalance, multiplyToWei,imageHttpFolder,frontHttpAdress] = await contract.getRebusData();
+    const info = `
+      <ul style="list-style-type: none; padding-left: 0; margin-left: 0;">
+        <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name : ${name} </li>
+        <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;attemptMinimum : ${attemptMinimum}n = ${attemptMinimum/1e+18}e</li>
+        <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;active : ${active} </li>
+        <li>prcJackpotOfBalance : ${prcJackpotOfBalance}% </li>
+        <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;multiplyToWei : ${multiplyToWei} </li>
+        <li>.......... </li>
+        <li>imageHttpFolder : ${imageHttpFolder}</li>
+        <li>frontHttpAdress : ${frontHttpAdress}</li>
+      </ul>
+    `;
+    document.getElementById("ownerOutput").innerHTML = info;
+    
+  } catch (e) {
+    document.getElementById("ownerOutput").textContent = "❌ Failed to fetch rebus data: " + e.message;
+  }
+}
+function displayOutput(text) {
+  document.getElementById("ownerOutput").textContent = text;
+}
+
+function handleError(error, message) {
+  console.error(message, error);
+  displayOutput("❌ " + message + ":\n" + error.message);
+}
+
+/*async function getUserDataOfAll() {
+  try {
+    const data = await contract.getUserDataOfAll();
+    if (!data || data.length === 0) {
+      displayOutput("No user data found.");
+      return;
+    }
+
+    let output = "User Data of All Players:\n\n";
+
+    data.forEach((user, i) => {
+      output += `User #${i + 1}:\n`;
+      output += ` - Attempt Sum: ${user.attemptSum.toString()}\n`;
+      output += ` - Win Sum: ${user.winSum.toString()}\n`;
+      output += ` - Attempt Counter: ${user.attemptCounter.toString()}\n`;
+      output += ` - Deposit Fee Counter: ${user.depositFeeCounter.toString()}\n`;
+      output += ` - Return Deposit Min: ${user.returnDepositMinimum}\n`;
+      output += ` - Return Deposit Max: ${user.returnDepositMaximum}\n`;
+      output += ` - Deposit Fee: ${user.depositFee}\n`;
+      output += ` - Clue Last: ${user.clueLast}\n`;
+      output += ` - Win Counter: ${user.winCounter}\n`;
+      output += ` - Clues Generated Only: ${user.cluesGeneratedOnly}\n`;
+      output += ` - Clues Random: ${user.cluesRandom}\n\n`;
+    });
+
+    displayOutput(output);
+  } catch (err) {
+    handleError(err, "Failed to fetch user data of all");
+  }
+}*/
+async function getUserDataOfAll() {
+  try {
+    const data = await contract.getUserDataOfAll();
+    if (!data || data.length === 0) {
+      displayOutput("No user data found.");
+      return;
+    }
+
+    let output = `<div>User Data of All Players:</div>`;
+
+    data.forEach((user, i) => {
+      output += `
+        <div style="margin-bottom: 1.5em;">
+          <strong>User #${i + 1}:</strong>
+          <ul style="list-style-type:none; padding-left:0; margin:0;">
+            <li>Attempt Sum: ${user.attemptSum.toString()}</li>
+            <li>Win Sum: ${user.winSum.toString()}</li>
+            <li>Attempt Counter: ${user.attemptCounter.toString()}</li>
+            <li>Deposit Fee Counter: ${user.depositFeeCounter.toString()}</li>
+            <li>Return Deposit Min: ${user.returnDepositMinimum}</li>
+            <li>Return Deposit Max: ${user.returnDepositMaximum}</li>
+            <li>Deposit Fee: ${user.depositFee}</li>
+            <li>Clue Last: ${user.clueLast}</li>
+            <li>Win Counter: ${user.winCounter}</li>
+            <li>Clues Generated Only: ${user.cluesGeneratedOnly}</li>
+            <li>Clues Random: ${user.cluesRandom}</li>
+          </ul>
+        </div>
+      `;
+    });
+   document.getElementById("ownerOutput").innerHTML = output;
+    //displayOutput(output);
+  } catch (err) {
+    handleError(err, "Failed to fetch user data of all");
+  }
+}
+
+function copyContractAddress() {
+  const address = document.getElementById("contractAddress").innerText;
+
+  navigator.clipboard.writeText(address)
+    .then(() => {
+      alert("Address copied to clipboard!");
+    })
+    .catch(err => {
+      console.error("Failed to copy!", err);
+    });
+}
+//---------------------------------------
+
+    init();
+const themeBtn = document.getElementById("themeToggle");
+
+function applyTheme(theme) {
+  document.body.classList.toggle("light-mode", theme === "light");
+  localStorage.setItem("theme", theme);
+}
+
+themeBtn.onclick = () => {
+  const current = document.body.classList.contains("light-mode") ? "light" : "dark";
+  const next = current === "light" ? "dark" : "light";
+  applyTheme(next);
+};
+
+(function () {
+  const savedTheme = localStorage.getItem("theme");
+  if (savedTheme === "light") applyTheme("light");
+})();
+
+  </script>
+</body>
+</html>
+
