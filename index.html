@@ -101,7 +101,7 @@
     align-items: flex-end;
     font-weight: normal;
     color: #90e0ef;
-    font-size: 1.4em;
+    font-size: 1.2em;
     min-width: 100px;
     line-height: 1.0;
     word-wrap: break-word;
@@ -269,73 +269,50 @@ body.light-mode .eth-label {
 
 </head>
 <body>
-<div style="display: flex; gap: 10px;top: 0;">
-  <!--<button class="styled-button" onclick="location.href='kr-local0.html';" >    Local 8545  </button>-->
-  <button                       onclick="location.href='index.html';">       Amoy  </button>
-  <!--<button class="styled-button" onclick="location.href='kr-amoy.html';">       Polygon Mainnet  </button>-->
-  <!--<button class="styled-button" onclick="location.href='kr-amoy.html';">       Ethereum Mainnet  </button>-->
-</div>
-<!-- Mezera po tlačítkách -->
-<div style="margin-top: 30px;"></div>
+
 
   <div class="header-container">
       <img src="nft_image_logo.png" class="logo" alt="Krypto Rebus" />
     <h1>Get: 💰 </h1>
     <div class="balance-wrapper">
-      <div id="balance" class="highlight">Loading...</div>
+      <div id="mainName" class="highlight"> all balance </div>
       <div class="eth-label">ETH</div>
     </div>
   </div>
 
-  <div style="text-align: center; margin-top: -1.5em;">
-  <h5 style="margin: 0 0 0.2em 0;">Contract Address:</h5>
-  <div style="display: inline-flex; align-items: center; gap: 0.2em; font-size: 1.3em; margin: 0;">
-    <span id="contractAddress">Loading...</span>
-    <button onclick="copyContractAddress()" 
-            title="Copy to clipboard"
-            style="
-              padding: 0;
-              margin-left: -2.1em;
-              font-size: 0.9em;
-              line-height: 1;
-              cursor: pointer;
-              border: none;
-              background: none;
-              vertical-align: middle;
-              position: relative;
-              top: -0.6em;
-            ">
-      📋
-    </button>
-  </div>
-</div>
+  <h5 style="margin: 0 0 0.2em 0;">Blockchain Net select:</h5>
+    <div style="display: flex; gap: 10px;top: 0;">
+      <button onclick="location.href='kr-local0.html';" >    🖥️Local  </button>
+      <button onclick="location.href='kr-amoy.html';">       🟠Amoy TEST net </button>
+      <button onclick="location.href='kr-ether.html';">    🟣Ethereum Mainnet  </button>
+      <button onclick="location.href='kr-bitcoin.html';">      🪙Bitcoin Mainnet  </button>
+     </div>
+   <!-- Mezera po tlačítkách -->
+    <div style="margin-top: 30px;"></div>
 
-
-
-
-  <h2>Send ETH to the contract as the correct solution to the rebus and get all the balance</h2>
-  <input type="number" id="amount" placeholder="Amount in ETH"  step="0.001" min="0" style=" width: 70%;
-    color: darkblue;               /* viditelný text */
-    background-color: lightgrey;    /* kontrastní pozadí */
-    border: 1px solid #ccc;
-    padding: 0.2em;
-    border-radius: 4px;
-    font-size: 1.3em; font-weight: bold; 
-  "/>
-  <button onclick="sendEth()">🚀 Send</button>
-  <div id="status2" style="word-wrap: break-word; overflow-wrap: break-word;
-    white-space: normal;font-weight: normal; color: grey; text-align: center; margin: 1em auto;"></div>
   <div style="display: flex; justify-content: flex-start; align-items: center; gap: 1em; width: 90%; margin: 1em auto;">
         <div id="status" style="
     word-wrap: break-word;
     overflow-wrap: break-word;
     white-space: normal;font-weight: normal; color: lightgrey;
-    ">Loading ...</div>
+    ">Select a network ...</div>
+    <button id="indexBtn" class="styled-button" onclick="location.href='index.html';" >🔗🟣 Net </button>
     <button id="helpBtn" class="styled-button" onclick="toggleHelp()">❓ Help</button>
     <button id="themeToggle" class="styled-button">🌞 / 🌙</button>
     <button id="reloadBtn" class="styled-button" onclick="reloadBtn()">🔄 Reload</button>
   </div>
-  
+  <div style="display: flex; justify-content: flex-start; align-items: center; gap: 1em; width: 90%; margin: 1em auto;">
+        <div id="status" style="
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;font-weight: normal; color: lightgrey;
+    ">Select a web ...</div>
+    <button id="webBtn1" class="styled-button" onclick="location.href='https://kryptorebus.github.io/index.html';" >
+        🌐 kryptorebus.github.io </button>
+    <button id="webBtn2" class="styled-button" onclick="location.href='https://kryptorebus.com/index.html';" >
+        🌐 kryptorebus.com </button>
+    
+  </div>
   <hr style="border: none; height: 2px; background-color: grey;">
   
   <div id="helpBox">Loading help...</div>
@@ -347,6 +324,8 @@ body.light-mode .eth-label {
             margin: -1em 0em 1em 5em;">
       <button onclick="withdrawAll()" 
         class="styled-button"style="margin: 0 0;">🏦 Withdraw All</button>
+      <button onclick="withdrawFees()" 
+        class="styled-button"style="margin: 0 0;">🏦 Withdraw Fees</button>  
       <button onclick="setContractActive(true)" 
         class="styled-button" style="margin: 0 0;">🔛 Activate</button>
       <button onclick="setContractActive(false)"
@@ -408,6 +387,17 @@ body.light-mode .eth-label {
 
 
   <h2>🔍 Your NFTs clues</h2>
+  <table>
+  <tr>
+    <td><img src="welcome_1.png" alt="1" width="100"></td>
+    <td><img src="clue_lo.png" alt="2" width="100"></td>
+    <td><img src="message.png" alt="2" width="100"></td>
+    <td><img src="profit.png" alt="3" width="100"></td>
+    <td><img src="clue_sw.png" alt="4" width="100"></td>
+    <td><img src="win_4.png" alt="4" width="100"></td>
+    <td><img src="thanks.png" alt="4" width="100"></td>
+  </tr>
+</table>
 <!--  <div id="nftList" class="nft-grid">Loading...</div>  -->
   <div id="nftList" class="nft-grid" style="margin: -1em auto 0 auto; color: grey" >.</div>
   
@@ -417,7 +407,7 @@ body.light-mode .eth-label {
   
   <input type="text" id="fromInput"    data-default="Name or your@email" placeholder="Name or your@email" style="width: 70%;" />
   <input type="text" id="messageInput" data-default="Message"placeholder="Message" style="width: 70%;" />
-  <input type="text" id="addInput"     data-default="Additional info (URL or note)" placeholder="Additional info (URL or note)" />
+  <!--<input type="text" id="addInput"     data-default="Additional info (URL or note)" placeholder="Additional info (URL or note)" />-->
   <input type="number" id="ethForMessage" data-default="ETH to send" placeholder="ETH to send" value="0.01" step="0.001" min="0" style="width: 50%;"/>
   <button onclick="sendMessageToOwner()">📧 Send Message</button>
   
@@ -427,8 +417,9 @@ body.light-mode .eth-label {
 
 
   <script>
-    //const CONTRACT_ADDRESS = "0x5FbDB2315678afecb367f032d93F642f64180aa3";//local
-    const CONTRACT_ADDRESS = "0x6868fB44016152f069A2D7AAb7EF35B47Eb2580A";//amoy
+    const CONTRACT_ADDRESS="0x5FbDB2315678afecb367f032d93F642f64180aa3";//local0
+     //const CONTRACT_ADDRESS="0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6";
+    //const CONTRACT_ADDRESS = "0x6868fB44016152f069A2D7AAb7EF35B47Eb2580A";//amoy
     //const CONTRACT_ADDRESS = "0x7D70387758dA586D49cc5F290f1Db2C0aD4595b1";//amoy2
     
  /*   
@@ -472,9 +463,9 @@ let provider, signer, userAddress, contract;
     async function init() {
   try {
     if (!window.ethereum) {
-      alert("MetaMask required.");
+      //alert("MetaMask required.");
       console.log("MetaMask not found");
-      document.getElementById("status2").textContent = "❌ MetaMask not found.";
+      //document.getElementById("status2").textContent = "❌ MetaMask not found.";
       return;
     }
 
@@ -668,7 +659,7 @@ let provider, signer, userAddress, contract;
     async function sendMessageToOwner() {
     const from = userAddress +":"+ document.getElementById("fromInput").value.trim();
     const message = document.getElementById("messageInput").value.trim();
-    const add = document.getElementById("addInput").value.trim();
+    const add = "";//const add = document.getElementById("addInput").value.trim();
     const ethValue = document.getElementById("ethForMessage").value.trim();
 
     if (/*!from || !message ||*/ !ethValue || isNaN(ethValue) || ethValue <= 0) {
@@ -707,6 +698,20 @@ async function withdrawAll() {
     document.getElementById("ownerOutput").textContent = "❌ Withdraw failed: " + err.message;
   }
 }
+async function withdrawFees() {
+  try {
+    const ownerContract = contract.connect(signer);
+    const tx = await ownerContract.withdrawFees();
+    document.getElementById("ownerOutput").textContent = "⏳ Withdrawing fees...";
+    await tx.wait();
+    document.getElementById("ownerOutput").textContent = "✅ Withdraw fees successful.";
+    const updated = await provider.getBalance(CONTRACT_ADDRESS);
+    document.getElementById("balance").textContent = ethers.utils.formatEther(updated);
+  } catch (err) {
+    document.getElementById("ownerOutput").textContent = "❌ Withdraw fees failed: " + err.message;
+  }
+}
+
 //--------------------------------------------------------
 // Funkce pro získání informací o clue
 async function getClueInfo() {
@@ -970,8 +975,8 @@ async function getUserDataOfAll() {
         <div style="margin-bottom: 1.5em;">
           <strong>User #${i + 1}:</strong>
           <ul style="list-style-type:none; padding-left:0; margin:0;">
-            <li>Attempt Sum: ${user.attemptSum.toString()}</li>
-            <li>Win Sum: ${user.winSum.toString()}</li>
+            <li>Attempt Sum: ${user.attemptSum.toString()}n = ${user.attemptSum/1e+18}e</li>
+            <li>Win Sum: ${user.winSum.toString()}n = ${user.winSum/1e+18}e : ${(user.winSum*100/user.attemptSum).toFixed(2)}%</li>
             <li>Attempt Counter: ${user.attemptCounter.toString()}</li>
             <li>Deposit Fee Counter: ${user.depositFeeCounter.toString()}</li>
             <li>Return Deposit Min: ${user.returnDepositMinimum}</li>
