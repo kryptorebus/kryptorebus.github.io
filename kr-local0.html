@@ -332,10 +332,10 @@ body.light-mode .eth-label {
     overflow-wrap: break-word;
     white-space: normal;font-weight: normal; color: lightgrey;
     ">Loading ...</div>
-    <button id="indexBtn" class="styled-button" onclick="location.href='index.html';" >🌐 Net </button>
-    <button id="helpBtn" class="styled-button" onclick="toggleHelp()">❓ Help</button>
+    <button id="indexBtn" class="styled-button" onclick="location.href='index.html';" >🏠Home </button>
+    <button id="helpBtn" class="styled-button" onclick="toggleHelp()">❓Help</button>
     <button id="themeToggle" class="styled-button">🌞 / 🌙</button>
-    <button id="reloadBtn" class="styled-button" onclick="reloadBtn()">🔁 Reload</button>
+    <button id="reloadBtn" class="styled-button" onclick="reloadBtn()">🔁Reload</button>
   </div>
   
   <hr style="border: none; height: 2px; background-color: grey;">
@@ -508,7 +508,7 @@ let provider, signer, userAddress, contract;
     contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, signer);
 
     const balance = await provider.getBalance(CONTRACT_ADDRESS);
-    document.getElementById("balance").textContent = ethers.utils.formatEther(balance);
+    document.getElementById("balance").textContent = parseFloat(ethers.utils.formatEther(balance)).toFixed(7);
     document.getElementById("contractAddress").textContent = CONTRACT_ADDRESS;
     //document.getElementById("fromInput").value = userAddress;
 
@@ -553,7 +553,7 @@ let provider, signer, userAddress, contract;
     try {
         const newBalance = await provider.getBalance(CONTRACT_ADDRESS);
         const balanceEl = document.getElementById("balance");
-        balanceEl.textContent = ethers.utils.formatEther(newBalance) ;
+        balanceEl.textContent = parseFloat(ethers.utils.formatEther(newbalance)).toFixed(7);
         balanceEl.classList.add("flash");
         setTimeout(() => balanceEl.classList.remove("flash"), 	120000); // 0.5 s
         
@@ -597,7 +597,7 @@ let provider, signer, userAddress, contract;
 
         const newBalance = await provider.getBalance(CONTRACT_ADDRESS);
         const balanceEl = document.getElementById("balance");
-        balanceEl.textContent = ethers.utils.formatEther(newBalance);
+        balanceEl.textContent = parseFloat(ethers.utils.formatEther(newbalance)).toFixed(7);
         balanceEl.classList.add("flash");
         setTimeout(() => balanceEl.classList.remove("flash"), 	120000);
         loadNFTs();
@@ -707,7 +707,7 @@ async function withdrawAll() {
     await tx.wait();
     document.getElementById("ownerOutput").textContent = "✅ Withdraw successful.";
     const updated = await provider.getBalance(CONTRACT_ADDRESS);
-    document.getElementById("balance").textContent = ethers.utils.formatEther(updated);
+    document.getElementById("balance").textContent = parseFloat(ethers.utils.formatEther(updated)).toFixed(7);
   } catch (err) {
     document.getElementById("ownerOutput").textContent = "❌ Withdraw failed: " + err.message;
   }
@@ -720,7 +720,7 @@ async function withdrawFees() {
     await tx.wait();
     document.getElementById("ownerOutput").textContent = "✅ Withdraw fees successful.";
     const updated = await provider.getBalance(CONTRACT_ADDRESS);
-    document.getElementById("balance").textContent = ethers.utils.formatEther(updated);
+    document.getElementById("balance").textContent = parseFloat(ethers.utils.formatEther(updated)).toFixed(7);
   } catch (err) {
     document.getElementById("ownerOutput").textContent = "❌ Withdraw fees failed: " + err.message;
   }
