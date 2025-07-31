@@ -280,7 +280,7 @@ body.light-mode .eth-label {
   </div>
 
   <div style="text-align: center; margin-top: -1.5em;">
-  <h5 style="margin: 0 0 0.2em 0;">Amoy2 site Contract Address:</h5>
+  <h5 style="margin: 0 0 0.2em 0;">Amoy site Contract Address:</h5>
   <div style="display: inline-flex; align-items: center; gap: 0.2em; font-size: 1.3em; margin: 0;">
     <span id="contractAddress">Loading...</span>
     <button onclick="copyContractAddress()" 
@@ -424,9 +424,8 @@ body.light-mode .eth-label {
   <script>
     //const CONTRACT_ADDRESS="0x5FbDB2315678afecb367f032d93F642f64180aa3";//local0
     //const CONTRACT_ADDRESS="0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6";
-    //const CONTRACT_ADDRESS = "0x6868fB44016152f069A2D7AAb7EF35B47Eb2580A";//amoy
-    const CONTRACT_ADDRESS = "0x9c73e232e237dc9ec552A84d354d09F919311E20";//amoy
- 
+    const CONTRACT_ADDRESS = "0x6868fB44016152f069A2D7AAb7EF35B47Eb2580A";//amoy
+  
     //const CONTRACT_ADDRESS = "0x7D70387758dA586D49cc5F290f1Db2C0aD4595b1";//amoy2
     
  /*   
@@ -892,7 +891,7 @@ async function getAllUsersData() {
         <li>...winCounter : ${winCounter} </li>
         <li>.......winSum : ${winSum}n = ${winSum/1e+18}e : ${(winSum*100/attemptSum).toFixed(2)}%</li>
         <li>feeCounter... : ${feeCounter} </li>
-        <li>feeSumPartial : ${feeSumPartial}n = ${feeSumPartial/1e+18}e : ${(feeSumPartial*100/attemptSum).toFixed(2)}%</li>
+        <li>feeSumPartial : ${feeSumPartial}n = ${feeSumPartial/1e+18}e </li>
         <li>feeSum....... : ${feeSum}n = ${feeSum/1e+18}e : ${(feeSum*100/attemptSum).toFixed(2)}%</li>
       </ul>
     `;
