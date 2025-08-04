@@ -553,7 +553,7 @@ let provider, signer, userAddress, contract;
     try {
         const newBalance = await provider.getBalance(CONTRACT_ADDRESS);
         const balanceEl = document.getElementById("balance");
-        balanceEl.textContent = parseFloat(ethers.utils.formatEther(newbalance)).toFixed(7);
+        balanceEl.textContent = parseFloat(ethers.utils.formatEther(newBalance)).toFixed(7);
         balanceEl.classList.add("flash");
         setTimeout(() => balanceEl.classList.remove("flash"), 	120000); // 0.5 s
         
@@ -597,7 +597,7 @@ let provider, signer, userAddress, contract;
 
         const newBalance = await provider.getBalance(CONTRACT_ADDRESS);
         const balanceEl = document.getElementById("balance");
-        balanceEl.textContent = parseFloat(ethers.utils.formatEther(newbalance)).toFixed(7);
+        balanceEl.textContent = parseFloat(ethers.utils.formatEther(newBalance)).toFixed(7);
         balanceEl.classList.add("flash");
         setTimeout(() => balanceEl.classList.remove("flash"), 	120000);
         loadNFTs();
